@@ -1,0 +1,94 @@
+:root {
+	--fg: #e8e8e8;
+	--lg: #c0c0c0;
+	--mg: #808080;
+	--dg: #404040;
+	--bg: #000000;
+}
+body {
+	margin: 0;
+	background-color: var(--bg);
+	color: var(--fg);
+	font-family: "Inter", sans-serif;
+}
+h1, h2, h3, p {
+	margin: 0;
+}
+header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	margin: auto;
+	border-bottom: 1px solid var(--dg);
+	padding: 16px;
+	max-width: calc(1280px - 32px);
+}
+header section {
+	display: flex;
+	justify-content: flex-start;
+	align-items: center;
+	width: fit-content;
+	height: fit-content;
+}
+header .pad {
+	margin: 0 8px 0 8px;
+}
+header img {
+	width: 32px;
+	height: 32px;
+}
+header h1 {
+	font-size: 14pt;
+	font-weight: 600;
+}
+header h2 {
+	font-size: 14pt;
+	font-weight: 500;
+}
+header h3 {
+	font-size: 12pt;
+	font-weight: 400;
+}
+header textarea {
+	border: 0;
+	border-radius: 8px;
+	box-shadow: 0 0 0 0 var(--bg);
+	padding: 2px 4px 2px 4px;
+	background-color: var(--bg);
+	color: var(--fg);
+	resize: none;
+	font-family: "IBM Plex Mono", monospace;
+	font-size: 14pt;
+	transition:
+		box-shadow ease 0.25s,
+		background-color ease 0.25s;
+}
+header textarea:hover {
+	background-color: var(--dg);
+	box-shadow: 0 0 0 4px var(--dg);
+}
+header textarea:focus {
+	background-color: var(--dg);
+	box-shadow: 0 0 0 4px var(--dg);
+	outline: none;
+}
+a.button {
+	text-decoration: none;
+	border: 0;
+	border-radius: 8px;
+	box-shadow:
+		0 0 0 0 var(--bg),
+		0 0 0 1px var(--fg);
+	transition: box-shadow ease 0.25s;
+	padding: 8px 16px 8px 16px;
+	background-color: var(--bg);
+	color: var(--fg);
+	font-weight: 900;
+}
+a.button:hover {
+	box-shadow:
+		0 0 0 2px var(--bg),
+		0 0 0 3px var(--fg);
+}
