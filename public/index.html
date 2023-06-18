@@ -7,19 +7,16 @@
 		<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Noto+Color+Emoji&display=swap" rel="stylesheet" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="index.css" />
+		<link rel="icon" href="quadrangle.svg" type="image/svg" />
 		<script src="index.js"></script>
 	</head>
 	<body>
 		<header>
 			<section>
 				<img class="pad" src="quadrangle.svg" alt="Quadrangles" />
-				<h1 class="pad">quadrangles.ca</h1>
-				<textarea
-					id="topic"
-					rows="1"
-					cols="4"
-					maxlength="5"
-					placeholder=":">:root</textarea>
+				<h1 class="pad">Quadrangles</h1>
+				<input id="topic" class="pad" type="text" maxlength="5" value=":root"></input>
+				<h3 id="message" class="pad"></h3>
 			</section>
 			<section>
 				<a class="button pad" href="https://github.com/quadrangles-ca/">
@@ -27,5 +24,6 @@
 				</a>
 			</section>
 		</header>
+		<div id="posts"></div>
 	</body>
 </html>
