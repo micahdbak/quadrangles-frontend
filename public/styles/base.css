@@ -82,7 +82,7 @@ header h3 {
 	font-weight: 300;
 	color: var(--mg);
 }
-a.button {
+button, a.button {
 	text-decoration: none;
 	border: 0;
 	border-radius: 8px;
@@ -93,60 +93,23 @@ a.button {
 	padding: 8px 16px 8px 16px;
 	background-color: var(--bg);
 	color: var(--fg);
-	font-weight: 900;
+	font-size: 12pt;
+	font-weight: 700;
 }
-a.button:hover {
+button.icon, a.button.icon {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 50%;
+	padding: 0;
+	width: 32px;
+	height: 32px;
+	font-size: 16pt;
+	font-weight: 400;
+}
+button:hover, a.button:hover {
 	box-shadow:
 		0 0 0 2px var(--bg),
 		0 0 0 3px var(--fg);
-}
-#posts {
-	display: flex;
-	justify-content: center;
-	align-items: flex-start;
-	flex-direction: row;
-	flex-wrap: wrap;
-	margin: auto;
-	padding: 32px;
-	max-width: 1280px;
-}
-#posts .post {
-	position: relative;
-	width: fit-content;
-	height: 256px;
-	background-color: blue;
-}
-#posts .post img {
-	max-width: 320px;
-	height: 256px;
-	object-fit: cover;
-}
-#posts .post section {
-	opacity: 0;
-	position: absolute;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	right: 0;
-	padding: 16px;
-	background-color: #00000080;
-	filter: drop-shadow(0 0 2px black);
-	transition: opacity ease 0.25s;
-}
-#posts .post:hover section {
-	opacity: 1;
-}
-#posts .post section h1 {
-	font-weight: 600;
-	font-size: 14pt;
-}
-#posts .post section p {
-	margin-top: 8px;
-	font-weight: 400;
-	font-size: 12pt;
-}
-#posts .post section a {
-	font-weight: 400;
-	font-size: 12pt;
-	color: var(--fgblue);
+	cursor: pointer;
 }

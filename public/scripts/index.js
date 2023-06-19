@@ -1,18 +1,20 @@
 // set to localhost for development; set to an empty string for production
 const HOST = "http://localhost:8000";
 
-function populate(arr) {
-	let posts = document.getElementById("posts");
+let posts = [];
 
-	posts.innerHTML = "";
+function populate() {
+	let _posts = document.getElementById("posts");
 
-	for (const p of arr) {
+	_posts.innerHTML = "";
+
+	for (const p of posts) {
 		let text = p.text;
 
 		if (text.length > 100)
 			text = text.substring(0, 100) + "...";
 
-		posts.innerHTML += `
+		_posts.innerHTML += `
 			<div class="post">
 				<img src="${HOST}${p.file}" />
 				<section>
@@ -59,10 +61,10 @@ window.onload = () => {
 			return;
 		}
 
-		let posts = await response.json();
+		posts = await response.json();
 		message.innerHTML = `Loaded ${posts.length} post${posts.length == 1 ? '' : 's'}.`;
 
-		populate(posts);
+		populate();
 	};
 	topicInput.onchange();
 };
