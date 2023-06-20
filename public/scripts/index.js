@@ -1,33 +1,6 @@
-// set to localhost for development; set to an empty string for production
-const HOST = "http://localhost:8000";
+import { populate, spawn } from "./quadrangles.js";
 
 let posts = [];
-
-function populate() {
-	let _posts = document.getElementById("posts");
-
-	_posts.innerHTML = "";
-
-	for (const p of posts) {
-		let text = p.text;
-
-		if (text.length > 100)
-			text = text.substring(0, 100) + "...";
-
-		_posts.innerHTML += `
-			<div class="post">
-				<img src="${HOST}${p.file}" />
-				<section>
-					<!--<h1>${p.title}</h1>-->
-					<p>${text}</p>
-					<a href="post.html?p=${p.pid}">
-						Open Post &nearr;
-					</a>
-				</section>
-			</div>
-		`;
-	}
-}
 
 window.onload = () => {
 	let topicInput = document.getElementById("topic");
@@ -50,7 +23,7 @@ window.onload = () => {
 		let response;
 
 		try {
-			response = await fetch(HOST + "/api/t/" + topic);
+			response = await fetch("/api/t/" + topic);
 		} catch {
 			message.innerHTML = "Could not contact server.";
 			return;
@@ -64,7 +37,16 @@ window.onload = () => {
 		posts = await response.json();
 		message.innerHTML = `Loaded ${posts.length} post${posts.length == 1 ? '' : 's'}.`;
 
-		populate();
+		populate(posts);
 	};
 	topicInput.onchange();
+
+	let createButton = document.getElementById("create");
+
+	createButton.onclick = () => {
+		spawn(`
+			<h1>Create a Post</h1>
+			<p>This is where you will create a post.</p>
+		`, createButton);
+	};
 };

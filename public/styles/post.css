@@ -6,10 +6,12 @@
 	flex-wrap: wrap;
 	margin: auto;
 	padding: 32px;
+	padding-top: 8px;
 	max-width: 1280px;
 }
 #posts .post {
 	position: relative;
+	margin: 8px;
 	border: 1px solid var(--dg);
 	width: fit-content;
 	height: 256px;
