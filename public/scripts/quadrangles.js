@@ -9,23 +9,29 @@ function header(post) {
 		<a href="/index.html">Go Back</a>
 	`;
 
-	document.body.innerHTML = `
-		<header>
-			<div class="group">
-				<h1>Quadrangles</h1>
-				${text}
-			</div>
-			<div class="group">
-				<a id="create" class="btn">Create</a>
-			</div>
-		</header>
-		${document.body.innerHTML}
+	let header = document.createElement("header");
+	header.innerHTML = `
+		<div class="group">
+			<h1>Quadrangles</h1>
+			${text}
+		</div>
+		<div class="group">
+			<a id="create" class="btn">Create</a>
+		</div>
 	`;
+	document.body.prepend(header);
 
 	let createButton = document.getElementById("create");
 
 	createButton.onclick = () => {
 		spawnCreate(createButton);
+	};
+
+	window.onscroll = () => {
+		if (window.scrollY > 0)
+			header.classList.add("sticky");
+		else
+			header.classList.remove("sticky");
 	};
 }
 
@@ -160,11 +166,26 @@ function setCookie(key, value) {
 	document.cookie = `${key}=${value}`;
 }
 
+function getTime(unix) {
+	const options = {
+		year: "numeric",
+		month: "long",
+		day: "numeric",
+		hour: "numeric",
+		minute: "numeric"
+	};
+
+	let d = new Date(unix * 1000);
+
+	return d.toLocaleDateString("en-US", options);
+}
+
 export {
 	HOST,
 	header,
 	populate,
 	spawn,
 	getCookie,
-	setCookie
+	setCookie,
+	getTime
 };

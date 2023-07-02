@@ -1,55 +1,79 @@
-#posts {
+.post {
 	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
 	justify-content: center;
-	align-items: flex-start;
-	flex-direction: row;
-	flex-wrap: wrap;
-	margin: auto;
-	padding: 32px;
-	padding-top: 8px;
-	max-width: 1280px;
+	align-content: center;
+	align-items: center;
+	width: 100vw;
+	padding: 0;
+	padding-bottom: 16px;
+	height: calc(100vh - 16px - 65px);
 }
-#posts .post {
-	position: relative;
-	margin: 8px;
+#post-desc {
+	padding: 16px;
+	width: calc(min(100vw - 32px, 768px));
+}
+#post-desc img {
+	display: block;
+	margin: auto;
 	border: 1px solid var(--sh);
-	width: fit-content;
 	height: 256px;
 	background-color: var(--mg);
 }
-#posts .post img {
-	min-width: 224px;
-	max-width: 320px;
-	height: 256px;
-	object-fit: cover;
+#post-desc p {
+	display: block;
+	margin: 16px 0;
+	font-size: 14pt;
+	font-weight: 400;
 }
-#posts .post section {
-	opacity: 0;
+#post-desc h3 {
+	display: block;
+	margin: 16px 0;
+	color: var(--sh);
+	font-size: 12pt;
+	font-weight: 400;
+}
+section.comment-box {
+	flex-grow: 1;
+	position: relative;
+	padding: 0 16px;
+	width: calc(min(100vw - 32px, 768px));
+}
+#messages {
 	position: absolute;
 	top: 0;
 	left: 0;
-	bottom: 0;
+	bottom: 40px;
 	right: 0;
-	padding: 16px;
-	background-color: #00000080;
-	color: white;
-	filter: drop-shadow(0 0 2px black);
-	transition: opacity ease 0.25s;
+	overflow-y: scroll;
 }
-#posts .post:hover section {
-	opacity: 1;
-}
-#posts .post section h1 {
-	font-weight: 600;
-	font-size: 14pt;
-}
-#posts .post section p {
-	margin-top: 8px;
-	font-weight: 400;
+#messages p {
+	margin: 4px 0;
+	line-height: 24px;
 	font-size: 12pt;
 }
-#posts .post section a {
-	font-weight: 400;
+#messages span.info {
+	color: var(--sh);
+}
+#message {
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	border: 1px solid var(--lt);
+	border-radius: 4px;
+	padding: 4px 8px;
+	width: calc(100% - 16px);
+	height: 24px;
+	line-height: 24px;
+	background-color: var(--in);
 	font-size: 12pt;
-	color: var(--blue);
+	transition:
+		border-width ease 0.25s,
+		border-color ease 0.25s;
+}
+#message:focus {
+	border: 2px solid var(--sh);
+	outline: none;
 }
