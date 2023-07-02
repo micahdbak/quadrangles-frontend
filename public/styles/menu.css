@@ -8,7 +8,7 @@
 	border-radius: 8px;
 	padding: 16px;
 	background-color: var(--bg);
-	box-shadow: 0 0 16px 4px black;
+	box-shadow: 0 0 16px 4px var(--sh);
 }
 .menu #close {
 	position: absolute;

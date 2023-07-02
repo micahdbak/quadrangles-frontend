@@ -1,4 +1,4 @@
-import { HOST } from "./quadrangles.js";
+import { HOST, header } from "./quadrangles.js";
 
 function err(e, message) {
 	e.innerHTML = `
@@ -18,7 +18,6 @@ window.onload = async () => {
 	}
 
 	let pid = params.get("pid");
-
 	let res;
 
 	try {
@@ -34,6 +33,9 @@ window.onload = async () => {
 	}
 
 	let post = await res.json();
+
+	header(post);
+
 	let postDesc = document.getElementById("post-desc");
 	postDesc.innerHTML = `
 		<img src="/api/f/${post.file}" />

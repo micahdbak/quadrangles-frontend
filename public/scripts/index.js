@@ -1,7 +1,7 @@
 import {
+	header,
 	populate,
 	spawn,
-	spawnCreate,
 	getCookie,
 	setCookie
 } from "./quadrangles.js";
@@ -9,6 +9,14 @@ import {
 let posts = [];
 
 window.onload = () => {
+	const params = new URLSearchParams(window.location.search);
+
+	if (params.has("post")) {
+		window.location = `/post?pid=${params.get("post")}`;
+	}
+
+	header(null);
+
 	let topic = getCookie("topic");
 
 	if (topic === undefined) {
@@ -56,10 +64,4 @@ window.onload = () => {
 		populate(posts);
 	};
 	topicInput.onchange();
-
-	let createButton = document.getElementById("create");
-
-	createButton.onclick = () => {
-		spawnCreate(createButton);
-	};
 };

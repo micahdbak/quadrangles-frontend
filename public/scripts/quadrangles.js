@@ -1,5 +1,34 @@
 const HOST = "localhost:8080";
 
+function header(post) {
+	let text = post == null ? `
+		<input id="topic" type="text" maxlength="5" value=":root"></input>
+		<h3 id="message"></h3>
+	` : `
+		<h2>?post=${post.pid}</h2>
+		<a href="/index.html">Go Back</a>
+	`;
+
+	document.body.innerHTML = `
+		<header>
+			<div class="group">
+				<h1>Quadrangles</h1>
+				${text}
+			</div>
+			<div class="group">
+				<a id="create" class="btn">Create</a>
+			</div>
+		</header>
+		${document.body.innerHTML}
+	`;
+
+	let createButton = document.getElementById("create");
+
+	createButton.onclick = () => {
+		spawnCreate(createButton);
+	};
+}
+
 function populate(posts) {
 	let _posts = document.getElementById("posts");
 
@@ -34,6 +63,8 @@ function spawn(innerHTML, initiator) {
 
 	initiator.disabled = true;
 	window.qrInitiator = initiator;
+
+	console.log("TRYING TO");
 
 	e.classList.add("menu");
 	e.innerHTML = `
@@ -129,4 +160,11 @@ function setCookie(key, value) {
 	document.cookie = `${key}=${value}`;
 }
 
-export { HOST, populate, spawn, spawnCreate, getCookie, setCookie };
+export {
+	HOST,
+	header,
+	populate,
+	spawn,
+	getCookie,
+	setCookie
+};

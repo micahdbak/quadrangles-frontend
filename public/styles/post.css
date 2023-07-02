@@ -12,7 +12,7 @@
 #posts .post {
 	position: relative;
 	margin: 8px;
-	border: 1px solid var(--dg);
+	border: 1px solid var(--sh);
 	width: fit-content;
 	height: 256px;
 	background-color: var(--mg);
@@ -32,6 +32,7 @@
 	right: 0;
 	padding: 16px;
 	background-color: #00000080;
+	color: white;
 	filter: drop-shadow(0 0 2px black);
 	transition: opacity ease 0.25s;
 }
@@ -50,13 +51,5 @@
 #posts .post section a {
 	font-weight: 400;
 	font-size: 12pt;
-	color: var(--fgblue);
-}
-#post-desc {
-	width: 512px;
-}
-#post-desc img {
-	display: block;
-	margin: auto;
-	max-width: 320px;
+	color: var(--blue);
 }
