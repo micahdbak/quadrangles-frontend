@@ -1,3 +1,5 @@
+const HOST = "localhost:8080";
+
 function populate(posts) {
 	let _posts = document.getElementById("posts");
 
@@ -11,11 +13,11 @@ function populate(posts) {
 
 		_posts.innerHTML += `
 			<div class="post">
-				<img src="${p.file}" />
+				<img src="/api/f/${p.file}" />
 				<section>
 					<!--<h1>${p.title}</h1>-->
 					<p>${text}</p>
-					<a href="post.html?p=${p.pid}">
+					<a href="post?pid=${p.pid}">
 						Open Post &nearr;
 					</a>
 				</section>
@@ -45,4 +47,86 @@ function spawn(innerHTML, initiator) {
 	document.body.appendChild(e);
 }
 
-export { populate, spawn };
+function spawnCreate(initiator) {
+	spawn(`
+		<input id="create-file" type="file" name="file" /><br>
+		<input id="create-topic" type="text" /><br>
+		<input id="create-text" type="text" /><br>
+		<button id="create-submit">Submit</button>
+		<p id="create-message"></p>
+	`, initiator);
+
+	let submitButton = document.getElementById("create-submit");
+	submitButton.onclick = async () => {
+		const message = document.getElementById("create-message");
+
+		let fileForm = new FormData();
+		const fileInput = document.getElementById("create-file");
+
+		fileForm.append("file", fileInput.files[0]);
+
+		let file;
+
+		try {
+			file = await fetch("/api/file", {
+				method: "POST",
+				body: fileForm
+			});
+		} catch {
+			message.innerHTML = "Failed to upload file.";
+			return;
+		}
+
+		if (!file.ok) {
+			message.innerHTML = `Server responded ${file.status}`;
+			return;
+		}
+
+		message.innerHTML = "File uploaded...";
+
+		const fid = parseInt(await file.text());
+		const topic = document.getElementById("create-topic").value;
+		const text = document.getElementById("create-text").value;
+
+		let postForm = new FormData();
+
+		postForm.append("fid", fid);
+		postForm.append("topic", topic);
+		postForm.append("text", text);
+
+		let post;
+
+		try {
+			post = await fetch("/api/post", {
+				method: "POST",
+				body: postForm
+			});
+		} catch {
+			message.innerHTML = "Failed to create post.";
+			return;
+		}
+
+		if (!post.ok) {
+			message.innerHTML = `Server responded ${post.status}.`;
+			return;
+		}
+
+		const pid = await post.json();
+		window.location = `/post?pid=${pid}`;
+	};
+}
+
+function getCookie(key) {
+	let v = document.cookie.split("; ").find((s) => s.startsWith(`${key}=`));
+
+	if (v === undefined)
+		return undefined;
+
+	return v.split("=")[1];
+}
+
+function setCookie(key, value) {
+	document.cookie = `${key}=${value}`;
+}
+
+export { HOST, populate, spawn, spawnCreate, getCookie, setCookie };

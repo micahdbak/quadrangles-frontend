@@ -47,3 +47,35 @@ button:hover, a.button:hover {
 		0 0 0 3px var(--fg);
 	cursor: pointer;
 }
+.cols {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	margin: 16px;
+}
+.col {
+	display: block;
+	flex-grow: 1;
+}
+section.align-right {
+	display: block;
+	margin-left: auto;
+	width: fit-content;
+	height: fit-content;
+}
+@media only screen and (max-width: 800px) {
+	.cols {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		flex-direction: column;
+		flex-wrap: nowrap;
+	}
+	.col {
+		flex-grow: 0;
+		width: fit-content;
+		height: fit-content;
+	}
+}
