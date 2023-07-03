@@ -1,12 +1,32 @@
 import {
 	header,
-	populate,
 	spawn,
 	getCookie,
 	setCookie
 } from "./quadrangles.js";
+import Carousel from "./carousel.js";
 
-let posts = [];
+window.carousel = null;
+
+function populate(posts) {
+	let root = document.getElementById("root");
+
+	root.innerHTML = `
+		<div id="btn-prev"></div>
+		<div id="btn-next"></div>
+	`;
+
+	if (window.carousel != null)
+		delete window.carousel;
+
+	window.carousel = new Carousel(posts);
+
+	let prev = document.getElementById("btn-prev");
+	let next = document.getElementById("btn-next");
+
+	prev.onclick = () => { carousel.right(); }
+	next.onclick = () => { carousel.left(); }
+}
 
 window.onload = () => {
 	const params = new URLSearchParams(window.location.search);
@@ -44,7 +64,7 @@ window.onload = () => {
 		topic = topicInput.value.substring(1, topicInput.value.length);
 		setCookie("topic", topic);
 
-		let response;
+		let response, posts;
 
 		try {
 			response = await fetch("/api/t/" + topic);

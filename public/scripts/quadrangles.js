@@ -35,32 +35,6 @@ function header(post) {
 	};
 }
 
-function populate(posts) {
-	let _posts = document.getElementById("posts");
-
-	_posts.innerHTML = "";
-
-	for (const p of posts) {
-		let text = p.text;
-
-		if (text.length > 100)
-			text = text.substring(0, 100) + "...";
-
-		_posts.innerHTML += `
-			<div class="post">
-				<img src="/api/f/${p.file}" />
-				<section>
-					<!--<h1>${p.title}</h1>-->
-					<p>${text}</p>
-					<a href="post?pid=${p.pid}">
-						Open Post &nearr;
-					</a>
-				</section>
-			</div>
-		`;
-	}
-}
-
 function spawn(innerHTML, initiator) {
 	if (window.qrInitiator && window.qrInitiator.disabled == true)
 		return;
@@ -183,7 +157,6 @@ function getTime(unix) {
 export {
 	HOST,
 	header,
-	populate,
 	spawn,
 	getCookie,
 	setCookie,
