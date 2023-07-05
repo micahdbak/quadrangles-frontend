@@ -10,10 +10,6 @@ import {
 window.onload = () => {
 	const params = new URLSearchParams(window.location.search);
 
-	if (params.has("post")) {
-		window.location = `/post?pid=${params.get("post")}`;
-	}
-
 	header(null);
 
 	let topic = getCookie("topic");
@@ -60,7 +56,7 @@ window.onload = () => {
 		}
 
 		message.innerHTML = `Loaded ${posts.length} post${posts.length == 1 ? '' : 's'}.`;
-		populate(posts);
+		populate(posts, params.get("post"));
 	};
 	topicInput.onchange();
 };

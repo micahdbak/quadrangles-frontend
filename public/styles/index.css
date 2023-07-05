@@ -168,9 +168,11 @@
 	height: 100%;
 	line-height: 24px;
 	position: relative;
+	text-align: left;
 }
 #comment-box.active #messages {
 	position: absolute;
+	overflow: scroll;
 	top: 32px;
 	left: 0;
 	bottom: 32px;
@@ -184,7 +186,7 @@
 #comment-box.active #messages span.info {
 	color: var(--sf);
 }
-#comment-box.active #message {
+#comment-box.active #ws-message {
 	position: absolute;
 	bottom: 0;
 	left: 0;
@@ -199,6 +201,6 @@
 	font-size: 12pt;
 	transition: outline ease 0.25s;
 }
-#comment-box.active #message:focus {
+#comment-box.active #ws-message:focus {
 	outline: 2px solid var(--sf);
 }
