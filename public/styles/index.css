@@ -1,6 +1,11 @@
+#root::-webkit-scrollbar {
+	display: none;
+}
 #root {
 	overflow-x: scroll;
 	scroll-behavior: smooth;
+	-ms-overflow-style: none;
+	scrollbar-width: none;
 	position: relative;
 	width: 100vw;
 	height: calc(100vh - 64px);
@@ -90,4 +95,110 @@
 }
 .post.select h3 {
 	color: var(--sf);
+}
+#comment-box {
+	z-index: 98;
+	position: fixed;
+	bottom: 0;
+	left: 50%;
+	border-radius: 16px 16px 0 0;
+	width: 100vw;
+	max-width: 368px;
+	height: 32px;
+	line-height: 32px;
+	background-color: var(--hg);
+	text-align: center;
+	transform: translateX(-50%);
+	transition:
+		border-radius ease 0.25s,
+		height ease 0.25s,
+		line-height ease 0.25s,
+		background-color ease 0.25s;
+}
+#comment-box #up-prompt {
+	display: block;
+	color: var(--fg);
+	font-size: 12pt;
+	font-weight: 400;
+	text-decoration: none;
+}
+#comment-box .comment-body {
+	display: none;
+}
+#comment-box:hover {
+	border-radius: 24px 24px 0 0;
+	height: 48px;
+	line-height: 48px;
+	background-color: var(--hl);
+	cursor: pointer;
+}
+#comment-box.active {
+	border-radius: 0;
+	outline: 1px solid var(--hl);
+	height: calc(100vh - 64px);
+	background-color: var(--bg);
+}
+#comment-box.active:hover {
+	cursor: unset;
+}
+#comment-box.active #up-prompt {
+	display: none;
+}
+#comment-box.active #down-prompt {
+	display: block;
+	width: 100%;
+	height: 32px;
+	line-height: 32px;
+	background-color: var(--hg);
+	color: var(--fg);
+	text-decoration: none;
+	text-align: center;
+	font-size: 12pt;
+	font-weight: 400;
+	transition: background-color ease 0.25s;
+}
+#comment-box.active #down-prompt:hover {
+	background-color: var(--hl);
+	cursor: pointer;
+}
+#comment-box.active .comment-body {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	height: 100%;
+	line-height: 24px;
+	position: relative;
+}
+#comment-box.active #messages {
+	position: absolute;
+	top: 32px;
+	left: 0;
+	bottom: 32px;
+	right: 0;
+}
+#comment-box.active #messages p {
+	margin: 4px 0;
+	line-height: 24px;
+	font-size: 12pt;
+}
+#comment-box.active #messages span.info {
+	color: var(--sf);
+}
+#comment-box.active #message {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	border: 0;
+	outline: 1px solid var(--hl);
+	padding: 4px 8px;
+	width: calc(100% - 16px);
+	height: 24px;
+	line-height: 24px;
+	background-color: var(--hg);
+	color: var(--fg);
+	font-size: 12pt;
+	transition: outline ease 0.25s;
+}
+#comment-box.active #message:focus {
+	outline: 2px solid var(--sf);
 }

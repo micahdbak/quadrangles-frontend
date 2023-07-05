@@ -35,6 +35,91 @@ function header(post) {
 	};
 }
 
+function updatePosts(_posts_i) {
+	window.qr_posts_e[window.qr_posts_i].classList.remove("select");
+	window.qr_posts_e[_posts_i].classList.add("select");
+	window.qr_posts_i = _posts_i;
+}
+
+function populate(posts) {
+	let root = document.getElementById("root");
+	root.innerHTML = `
+		<div id="btn-prev" class="btn-icon">&lt;</div>
+		<div id="btn-next" class="btn-icon">&gt;</div>
+		<div id="comment-box">
+			<p id="up-prompt">&uarr;</p>
+			<div class="comment-body">
+				<p id="down-prompt">&darr;</p>
+				<div id="messages"></div>
+				<input type="text" id="message"></input>
+			</div>
+		</div>
+	`;
+
+	let comment_box = document.getElementById("comment-box");
+	let up_prompt = document.getElementById("up-prompt");
+	let down_prompt = document.getElementById("down-prompt");
+
+	up_prompt.onclick = () => {
+		comment_box.classList.add("active");
+	};
+	down_prompt.onclick = () => {
+		comment_box.classList.remove("active");
+	};
+
+	window.qr_posts_e = [];
+	window.qr_posts_i = 0;
+
+	let i = 0;
+	for (const p of posts) {
+		let post = document.createElement("div");
+		post.classList.add("post");
+		post.innerHTML = `
+			<img src="/api/f/${p.file}" alt="${p.pid}'s image" />
+			<p>${p.text}</p>
+			<h3>${getTime(p.time)}</h3>
+		`;
+		post.style.left = `calc(50% + ${i} * 256px)`;
+		post = root.appendChild(post);
+		window.qr_posts_e.push(post);
+		i++;
+	}
+	window.qr_posts_e[0].classList.add("select");
+
+	let padding_post = document.createElement("div");
+	padding_post.classList.add("padding-post");
+	padding_post.style.left = `calc(50% + ${i} * 256px)`;
+	root.appendChild(padding_post);
+
+	let btn_prev = document.getElementById("btn-prev");
+	let btn_next = document.getElementById("btn-next");
+
+	btn_prev.onclick = () => {
+		if (window.qr_posts_e === undefined || window.qr_posts_e.length == 0)
+			return;
+
+		if (window.qr_posts_i < 1) {
+			window.qr_posts_i = 0;
+			return;
+		}
+
+		updatePosts(window.qr_posts_i - 1);
+		root.scrollLeft = 256 * window.qr_posts_i;
+	}
+	btn_next.onclick = () => {
+		if (window.qr_posts_e === undefined || window.qr_posts_e.length == 0)
+			return;
+
+		if (window.qr_posts_i >= window.qr_posts_e.length - 1) {
+			window.qr_posts_i = window.qr_posts_e.length - 1;
+			return;
+		}
+
+		updatePosts(window.qr_posts_i + 1);
+		root.scrollLeft = 256 * window.qr_posts_i;
+	}
+}
+
 function spawn(innerHTML, initiator) {
 	if (window.qrInitiator && window.qrInitiator.disabled == true)
 		return;
@@ -157,6 +242,7 @@ function getTime(unix) {
 export {
 	HOST,
 	header,
+	populate,
 	spawn,
 	getCookie,
 	setCookie,
