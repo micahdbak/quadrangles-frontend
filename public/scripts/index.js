@@ -1,27 +1,32 @@
+// index.js
+// script for index.html
+
 import {
-	header,
+	init_ws,
 	populate,
 	spawn,
+	spawnCreate,
 	getCookie,
 	setCookie,
 	getTime
 } from "./quadrangles.js";
 
 window.onload = () => {
-	const params = new URLSearchParams(window.location.search);
+	document.getElementById("create").onclick = () =>
+		spawnCreate(document.getElementById("create"));
 
-	header(null);
-
+	// handle cookie for selected topic
 	let topic = getCookie("topic");
-
 	if (topic === undefined) {
 		topic = "root";
 		setCookie("topic", topic);
 	}
 
+	// browser parameters; e.g., for post
+	const params = new URLSearchParams(window.location.search);
+
 	let topicInput = document.getElementById("topic");
 	topicInput.value = `:${topic}`;
-
 	topicInput.oninput = () => {
 		if (topicInput.value[0] != ':')
 			topicInput.value = ":" + topicInput.value;
@@ -29,18 +34,18 @@ window.onload = () => {
 		if (topicInput.value.length > 5)
 			topicInput.value = topicInput.value.substring(0, 5);
 	};
-	topicInput.oninput();
-
-	let message = document.getElementById("message");
-	message.innerHTML = "All OK.";
-
+	topicInput.oninput(); // ensure that topic from cookies is valid
 	topicInput.onchange = async () => {
+		let message = document.getElementById("message");
 		message.innerHTML = "Loading...";
+
+		// get current topic from topic input (crop to exclude the ':')
 		topic = topicInput.value.substring(1, topicInput.value.length);
 		setCookie("topic", topic);
 
 		let response, posts;
 
+		// communicate with api to receive posts on this topic
 		try {
 			response = await fetch("/api/t/" + topic);
 
@@ -55,8 +60,11 @@ window.onload = () => {
 			return;
 		}
 
+		// provide information on number of posts received
 		message.innerHTML = `Loaded ${posts.length} post${posts.length == 1 ? '' : 's'}.`;
-		populate(posts, params.get("post"));
+		populate(posts, params.get("post")); // populate #posts with posts
 	};
-	topicInput.onchange();
+	topicInput.onchange(); // load topic specified by cookie
+
+	init_ws(); // initialize websocket buttons
 };

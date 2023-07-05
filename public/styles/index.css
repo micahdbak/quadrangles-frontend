@@ -1,15 +1,27 @@
-#root::-webkit-scrollbar {
+#scroller::-webkit-scrollbar {
 	display: none;
 }
-#root {
+#scroller {
 	overflow-x: scroll;
 	scroll-behavior: smooth;
 	-ms-overflow-style: none;
 	scrollbar-width: none;
-	position: relative;
 	width: 100vw;
-	height: calc(100vh - 64px);
+	height: fit-content;
 }
+#posts {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-content: center;
+	align-items: center;
+	position: relative;
+	padding: 0 calc(50vw - (var(--postsz) + 2*var(--postpad) + 2*var(--postmar))/2);
+	width: fit-content;
+	height: calc(100vh - 48px);
+}
+/*
 #btn-prev, #btn-next {
 	z-index: 98;
 	position: fixed;
@@ -42,56 +54,60 @@
 	height: 32px;
 	background-color: transparent;
 }
+*/
 .post {
+	/*
 	display: flex;
 	flex-direction: column;
 	flex-wrap: nowrap;
 	justify-content: flex-start;
 	align-content: flex-start;
 	align-items: flex-start;
-	position: absolute;
-	top: 50%;
-	margin: 8px;
+	*/
+	z-index: 96;
+	position: relative;
+	margin: var(--postmar);
 	outline: 0px solid var(--bg);
 	border-radius: 16px;
-	padding: 16px;
-	padding-bottom: 48px;
-	width: 256px;
+	padding: var(--postpad);
+	width: var(--postsz);
 	height: fit-content;
 	background-color: var(--bg);
 	color: var(--sf);
-	transform: translate(-50%, -50%) scale(0.66);
+	transform: /* translate(-50%, -50%) */ scale(1);
 	transition:
 		outline ease 0.25s,
 		transform ease 0.25s;
 }
 .post img {
+	display: block;
 	outline: 1px solid var(--hg);
 	border-radius: 8px;
-	aspect-ratio: 1/1;
-	width: 100%;
+	width: var(--postsz);
+	height: var(--postsz);
 	object-fit: cover;
 	background-color: var(--bg);
 }
 .post p {
 	display: block;
-	margin-top: 12px;
+	margin: 8px 0;
+	margin-bottom: 16px;
 	line-height: 20px;
-	font-size: 12pt;
+	font-size: 10pt;
 }
 .post h3 {
 	position: absolute;
 	bottom: 8px;
 	right: 8px;
 	color: var(--hl);
-	font-size: 10pt;
+	font-size: 8pt;
 	font-weight: 400;
 }
 .post.select {
 	z-index: 97;
 	outline: 2px solid var(--hl);
 	color: var(--fg);
-	transform: translate(-50%, -50%) scale(1);
+	transform: /* translate(-50%, -50%) */ scale(1.5);
 }
 .post.select h3 {
 	color: var(--sf);

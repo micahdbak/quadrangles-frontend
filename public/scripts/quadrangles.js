@@ -1,190 +1,173 @@
+// quadrangles.js
+// generalized functions for Quadrangles
+
 const HOST = "localhost:8080";
 
-function header(post) {
-	let text = post == null ? `
-		<input id="topic" type="text" maxlength="5" value=":root"></input>
-		<h3 id="message"></h3>
-	` : `
-		<h2>?post=${post.pid}</h2>
-		<a href="/index.html">Go Back</a>
-	`;
-
-	let header = document.createElement("header");
-	header.innerHTML = `
-		<div class="group">
-			<h1>Quadrangles</h1>
-			${text}
-		</div>
-		<div class="group">
-			<a id="create" class="btn">Create</a>
-		</div>
-	`;
-	document.body.prepend(header);
-
-	let createButton = document.getElementById("create");
-
-	createButton.onclick = () => {
-		spawnCreate(createButton);
-	};
-
-	window.onscroll = () => {
-		if (window.scrollY > 0)
-			header.classList.add("sticky");
-		else
-			header.classList.remove("sticky");
-	};
-}
-
-function updatePosts(_posts_i) {
-	window.qr_posts_e[window.qr_posts_i].classList.remove("select");
-	window.qr_posts_e[_posts_i].classList.add("select");
-	window.qr_posts_i = _posts_i;
-}
-
-function populate(posts, selected_pid) {
-	let root = document.getElementById("root");
-	root.innerHTML = `
-		<div id="btn-prev" class="btn-icon">&lt;</div>
-		<div id="btn-next" class="btn-icon">&gt;</div>
-		<div id="comment-box">
-			<p id="up-prompt">&uarr;</p>
-			<div class="comment-body">
-				<p id="down-prompt">&darr;</p>
-				<div id="messages"></div>
-				<input type="text" id="ws-message"></input>
-			</div>
-		</div>
-	`;
-
+function init_ws() {
 	let comment_box = document.getElementById("comment-box");
 	let up_prompt = document.getElementById("up-prompt");
 	let down_prompt = document.getElementById("down-prompt");
 
 	up_prompt.onclick = () => {
-		comment_box.classList.add("active"); // activate comment box
+		if (window.qr_ws != null) {
+			try {
+				window.qr_ws.close();
+			} catch {}
+			window.qr_ws = null;
+		}
 
-		let ws_message = document.getElementById("ws-message");
-		let messages = document.getElementById("messages");
-
-		ws_message.value = ""; // reset previously typed message
-		ws_message.addEventListener("keypress", (e) => {
-			// on enter key pressed
-			if (e.key == "Enter") {
-				// send message to server
-				try {
-					window.qr_ws.send(ws_message.value);
-				} catch {
-					messages.innerHTML += `<p>Could not send message.</p>`;
-				}
-
-				// reset value
-				ws_message.value = "";
-			}
-		});
-
-		messages.innerHTML = ""; // reset messages to nothing
-		messages.style.visibility = "hidden";
-
-		setTimeout(() => {
-			messages.scroll({
-				top: messages.scrollHeight - messages.offsetHeight,
-				left: 0,
-				behavior: "auto"
-			});
-			messages.style.visibility = "visible";
-		}, 100);
-
-		const params = new URLSearchParams(window.location.search);
-
-		let pid = params.get("post");
-
-		if (pid == null)
+		// invalid post
+		if (window.qr_post == -1)
 			return;
 
-		window.qr_ws = new WebSocket(`ws://${HOST}/api/ws/${pid}`);
+		// attempt to open websocket for this post
+		try {
+			window.qr_ws = new WebSocket(`ws://${HOST}/api/ws/${window.qr_post}`);
+		} catch { return; } // return on failure to do so
 
 		window.qr_ws.addEventListener("message", (e) => {
-			let m = JSON.parse(e.data);
+			// div that stores all received messages
+			let messages = document.getElementById("messages");
+			let m = JSON.parse(e.data); // received message
+
+			// create formatted p element for this message
 			let p = document.createElement("p");
 			p.innerHTML = `
 				<span class="info">(${m.cid}) ${getShortTime(m.time)}:</span> ${m.text}
 			`;
+
+			// add element to messages
 			messages.appendChild(p);
-			messages.scroll({
+			messages.scroll({ // scroll to newly received message
 				top: messages.scrollHeight - messages.offsetHeight,
 				left: 0,
 				behavior: "smooth"
 			});
 		});
+
+		// websocket is open; activate comment box
+		comment_box.classList.add("active");
+
+		// element that receives user input (new messages)
+		let ws_message = document.getElementById("ws-message");
+		ws_message.value = ""; // reset previously typed message
+		if (ws_message.getAttribute("keypress-listener") != "true") {
+			ws_message.setAttribute("keypress-listener", "true");
+			ws_message.addEventListener("keypress", (e) => {
+				// on enter key pressed
+				if (e.key == "Enter") {
+					// attempt to send message to server
+					try {
+						window.qr_ws.send(ws_message.value);
+					} catch {
+						let messages = document.getElementById("messages");
+						// notify user of failure
+						messages.innerHTML += `<p><span class="info">Could not send message.</span></p>`;
+					}
+
+					ws_message.value = "";
+				}
+			});
+		}
+
+		messages.innerHTML = ""; // reset messages to nothing
+		messages.style.visibility = "hidden"; // temporarily hide messages
+
+		// after a short period of time,
+		// scroll to bottom of received messages instantly,
+		// then make messages visible
+		setTimeout(() => {
+			messages.scroll({
+				top: messages.scrollHeight - messages.offsetHeight,
+				left: 0,
+				behavior: "instant"
+			});
+			messages.style.visibility = "visible";
+		}, 100);
 	};
 	down_prompt.onclick = () => {
+		// disable comment box
 		comment_box.classList.remove("active");
-		window.qr_ws.close(); // close websocket
+		// attempt to close websocket
+		try {
+			window.qr_ws.close();
+		} catch {}
 		window.qr_ws = null;
 	};
+}
 
+// selectPost: takes in posts_i; index in an array of posts visible under a topic
+function selectPost(posts_i) {
+	// ensure that index is valid
+	if (posts_i < 0 || posts_i >= window.qr_posts_e.length || window.qr_posts_i == posts_i)
+		return;
+
+	if (window.qr_posts_i != -1) {
+		window.qr_posts_e[window.qr_posts_i].classList.remove("select");
+	}
+
+	window.qr_posts_e[posts_i].classList.add("select");
+	window.qr_posts_i = posts_i;
+	try {
+		window.qr_post = window.qr_posts[window.qr_posts_i].pid;
+	} catch { window.qr_post = -1; }
+	window.history.replaceState({}, null, `?post=${window.qr_post}`);
+}
+
+// populate: populates the index page with an array of posts
+function populate(posts, selected_pid) {
+	window.qr_posts = posts;
 	window.qr_posts_e = [];
-	window.qr_posts_i = 0;
+	window.qr_posts_i = -1;
 
-	if (selected_pid === undefined || selected_pid == null)
-		selected_pid = 0;
+	let _posts = document.getElementById("posts");
+	_posts.innerHTML = "";
+	let i = 0, selected_i = -1;
 
-	let i = 0;
 	for (const p of posts) {
 		let post = document.createElement("div");
 		post.classList.add("post");
-
 		post.innerHTML = `
 			<img src="/api/f/${p.file}" alt="${p.pid}'s image" />
 			<p>${p.text}</p>
 			<h3>${getTime(p.time)}</h3>
 		`;
-		post.style.left = `calc(50% + ${i} * 256px)`;
-		post = root.appendChild(post);
+
+		post = _posts.appendChild(post);
 		window.qr_posts_e.push(post);
 
-		if (p.pid == selected_pid) {
-			updatePosts(i);
-			root.scrollLeft = 256 * i;
-		}
+		if (p.pid == selected_pid)
+			selected_i = i;
 
 		i++;
 	}
 
-	let padding_post = document.createElement("div");
-	padding_post.classList.add("padding-post");
-	padding_post.style.left = `calc(50% + ${i} * 256px)`;
-	root.appendChild(padding_post);
-
-	let btn_prev = document.getElementById("btn-prev");
-	let btn_next = document.getElementById("btn-next");
-
-	btn_prev.onclick = () => {
-		if (window.qr_posts_e === undefined || window.qr_posts_e.length == 0)
-			return;
-
-		if (window.qr_posts_i < 1) {
-			window.qr_posts_i = 0;
-			return;
-		}
-
-		updatePosts(window.qr_posts_i - 1);
-		root.scrollLeft = 256 * window.qr_posts_i;
-		window.history.replaceState({}, null, `?post=${posts[window.qr_posts_i].pid}`);
+	// post selection is invalid
+	if (selected_i == -1) {
+		// select the first post instead
+		selected_pid = posts[0].pid;
+		selected_i = 0;
 	}
-	btn_next.onclick = () => {
-		if (window.qr_posts_e === undefined || window.qr_posts_e.length == 0)
-			return;
 
-		if (window.qr_posts_i >= window.qr_posts_e.length - 1) {
-			window.qr_posts_i = window.qr_posts_e.length - 1;
-			return;
-		}
+	let scroller = document.getElementById("scroller");
+	let root = getComputedStyle(document.body);
+	let scrollw = // space between each post; scroll width
+		parseInt(root.getPropertyValue("--postsz")) +
+		2*parseInt(root.getPropertyValue("--postpad")) +
+		2*parseInt(root.getPropertyValue("--postmar"));
 
-		updatePosts(window.qr_posts_i + 1);
-		root.scrollLeft = 256 * window.qr_posts_i;
-		window.history.replaceState({}, null, `?post=${posts[window.qr_posts_i].pid}`);
-	}
+	scroller.onscroll = () => {
+		let x = scroller.scrollLeft + scrollw/2;
+		selectPost(Math.floor(x/scrollw));
+	};
+
+	// scroll to selected post
+	scroller.scroll({
+		"top": 0,
+		"left": selected_i * scrollw,
+		"behavior": "instant"
+	});
+	selectPost(selected_i);
 }
 
 function spawn(innerHTML, initiator) {
@@ -317,9 +300,10 @@ function getShortTime(unix) {
 
 export {
 	HOST,
-	header,
+	init_ws,
 	populate,
 	spawn,
+	spawnCreate,
 	getCookie,
 	setCookie,
 	getTime,

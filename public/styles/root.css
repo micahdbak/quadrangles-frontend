@@ -11,8 +11,13 @@
 	--fg: #f0f0f0; /* foreground */
 
 	--blue: #a0a0e8;
+
+	--postsz: 200px;
+	--postpad: 16px;
+	--postmar: 32px;
 }
 body {
+	position: relative;
 	margin: 0;
 	background-color: var(--bg);
 	color: var(--fg);

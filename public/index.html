@@ -12,6 +12,26 @@
 		<script type="module" src="scripts/index.js"></script>
 	</head>
 	<body>
-		<div id="root"></div>
+		<header>
+			<div class="group">
+				<h1>Quadrangles</h1>
+				<input id="topic" type="text" maxlength="5" value=":root"></input>
+				<h3 id="message"></h3>
+			</div>
+			<div class="group">
+				<a id="create" class="btn">Create</a>
+			</div>
+		</header>
+		<div id="scroller">
+			<div id="posts"></div>
+		</div>
+		<div id="comment-box">
+			<p id="up-prompt">&uarr;</p>
+			<div class="comment-body">
+				<p id="down-prompt">&darr;</p>
+				<div id="messages"></div>
+				<input type="text" id="ws-message"></input>
+			</div>
+		</div>
 	</body>
 </html>
