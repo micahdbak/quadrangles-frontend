@@ -1,20 +1,19 @@
 .menu {
-	z-index: 1;
+	z-index: 99;
 	position: absolute;
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
 	border: 1px solid var(--dg);
-	border-radius: 8px;
-	padding: 16px;
+	border-radius: 16px;
+	outline: 1px solid var(--hl);
+	padding: 32px;
 	background-color: var(--bg);
-	box-shadow: 0 0 16px 4px var(--sh);
 }
 .menu #close {
 	position: absolute;
 	top: 8px;
 	right: 8px;
-	text-align: right;
 }
 .menu #close:hover {
 	cursor: pointer;

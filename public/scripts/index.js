@@ -2,30 +2,75 @@ import {
 	header,
 	spawn,
 	getCookie,
-	setCookie
+	setCookie,
+	getTime
 } from "./quadrangles.js";
-import Carousel from "./carousel.js";
 
-window.carousel = null;
+var posts_e, posts_i;
+
+function updatePosts(_posts_i) {
+	posts_e[posts_i].classList.remove("select");
+	posts_e[_posts_i].classList.add("select");
+	posts_i = _posts_i;
+}
 
 function populate(posts) {
 	let root = document.getElementById("root");
-
 	root.innerHTML = `
-		<div id="btn-prev"></div>
-		<div id="btn-next"></div>
+		<div id="btn-prev" class="btn-icon">&lt;</div>
+		<div id="btn-next" class="btn-icon">&gt;</div>
 	`;
+	posts_e = [];
+	posts_i = 0;
 
-	if (window.carousel != null)
-		delete window.carousel;
+	let i = 0;
+	for (const p of posts) {
+		let post = document.createElement("div");
+		post.classList.add("post");
+		post.innerHTML = `
+			<img src="/api/f/${p.file}" alt="${p.pid}'s image" />
+			<p>${p.text}</p>
+			<h3>${getTime(p.time)}</h3>
+		`;
+		post.style.left = `calc(50% + ${i} * 256px)`;
+		post = root.appendChild(post);
+		posts_e.push(post);
+		i++;
+	}
+	posts_e[0].classList.add("select");
 
-	window.carousel = new Carousel(posts);
+	let padding_post = document.createElement("div");
+	padding_post.classList.add("padding-post");
+	padding_post.style.left = `calc(50% + ${i} * 256px)`;
+	root.appendChild(padding_post);
 
-	let prev = document.getElementById("btn-prev");
-	let next = document.getElementById("btn-next");
+	let btn_prev = document.getElementById("btn-prev");
+	let btn_next = document.getElementById("btn-next");
 
-	prev.onclick = () => { carousel.right(); }
-	next.onclick = () => { carousel.left(); }
+	btn_prev.onclick = () => {
+		if (posts_e === undefined || posts_e.length == 0)
+			return;
+
+		if (posts_i < 1) {
+			posts_i = 0;
+			return;
+		}
+
+		updatePosts(posts_i - 1);
+		root.scrollLeft = 256 * posts_i;
+	};
+	btn_next.onclick = () => {
+		if (posts_e === undefined || posts_e.length == 0)
+			return;
+
+		if (posts_i >= posts_e.length - 1) {
+			posts_i = posts_e.length - 1;
+			return;
+		}
+
+		updatePosts(posts_i + 1);
+		root.scrollLeft = 256 * posts_i;
+	};
 }
 
 window.onload = () => {

@@ -1,105 +1,93 @@
 #root {
+	overflow-x: scroll;
+	scroll-behavior: smooth;
 	position: relative;
 	width: 100vw;
 	height: calc(100vh - 64px);
 }
-.qrl, .qrc, .qrr, .qrg {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	width: fit-content;
-	height: fit-content;
-	transition:
-		z-index ease 0.5s,
-		transform ease 0.5s;
-}
-.qrl {
-	z-index: 10;
-	transform: translate(-100%, -50%) scale(0.75);
-}
-.qrc {
-	z-index: 20;
-	transform: translate(-50%, -50%) scale(1);
-}
-.qrr {
-	z-index: 10;
-	transform: translate(0, -50%) scale(0.75);
-}
-.qrg {
-	z-index: 0;
-	transform: translate(-50%, -50%) scale(0.5);
-}
 #btn-prev, #btn-next {
-	z-index: 99;
-	position: absolute;
+	z-index: 98;
+	position: fixed;
 	top: 50%;
-	transform: translateY(-50%);
-	border-radius: 50%;
-	width: 48px;
-	height: 48px;
-	line-height: 48px;
-	background-color: blue;
-	color: white;
-	text-align: center;
-	font-size: 16pt;
-	font-weight: 900;
-}
-#btn-prev {
-	left: calc(max((100vw - 640px) / 2, 32px));
-}
-#btn-next {
-	right: calc(max((100vw - 640px) / 2, 32px));
+	outline: 1px solid var(--hl);
+	background-color: var(--hl);
+	box-shadow: 0 0 4px 2px var(--bg);
+	transition:
+		outline ease 0.25s,
+		background-color ease 0.25s,
+		box-shadow ease 0.25s;
 }
 #btn-prev:hover, #btn-next:hover {
-	cursor: pointer;
+	outline: 2px solid var(--fg);
+	background-color: var(--sf);
+	box-shadow: 0 0 8px 4px var(--bg);
 }
-#btn-prev::before {
-	content: "&larr;";
+#btn-prev {
+	left: calc(max(50% - 256px, 32px));
+	transform: translate(-50%, -50%);
 }
-#btn-next::before {
-	content: "&rarr;";
+#btn-next {
+	right: calc(max(50% - 256px, 32px));
+	transform: translate(50%, -50%);
+}
+.padding-post {
+	position: absolute;
+	top: 50%;
+	width: calc(max(50vw - 256px, 128px));
+	height: 32px;
+	background-color: transparent;
 }
 .post {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: flex-start;
+	align-content: flex-start;
+	align-items: flex-start;
+	position: absolute;
+	top: 50%;
 	margin: 8px;
-	border: 1px solid var(--sh);
-	width: fit-content;
+	outline: 0px solid var(--bg);
+	border-radius: 16px;
+	padding: 16px;
+	padding-bottom: 48px;
+	width: 256px;
 	height: fit-content;
-	background-color: var(--mg);
+	background-color: var(--bg);
+	color: var(--sf);
+	transform: translate(-50%, -50%) scale(0.66);
+	transition:
+		outline ease 0.25s,
+		transform ease 0.25s;
 }
 .post img {
-	min-width: 368px;
-	max-width: 512px;
-	min-height: 368px;
-	max-height: 512px;
+	outline: 1px solid var(--hg);
+	border-radius: 8px;
+	aspect-ratio: 1/1;
+	width: 100%;
 	object-fit: cover;
+	background-color: var(--bg);
 }
-.post section {
-	opacity: 0;
+.post p {
+	display: block;
+	margin-top: 12px;
+	line-height: 20px;
+	font-size: 12pt;
+}
+.post h3 {
 	position: absolute;
-	top: 0;
-	left: 0;
-	bottom: 0;
-	right: 0;
-	padding: 16px;
-	background-color: #00000080;
-	color: white;
-	filter: drop-shadow(0 0 2px black);
-	transition: opacity ease 0.25s;
-}
-.post:hover section {
-	opacity: 1;
-}
-.post section h1 {
-	font-weight: 600;
-	font-size: 14pt;
-}
-.post section p {
-	margin-top: 8px;
+	bottom: 8px;
+	right: 8px;
+	color: var(--hl);
+	font-size: 10pt;
 	font-weight: 400;
-	font-size: 12pt;
 }
-.post section a {
-	font-weight: 400;
-	font-size: 12pt;
-	color: var(--blue);
+.post.select {
+	z-index: 97;
+	outline: 2px solid var(--hl);
+	color: var(--fg);
+	transform: translate(-50%, -50%) scale(1);
+}
+.post.select h3 {
+	color: var(--sf);
 }

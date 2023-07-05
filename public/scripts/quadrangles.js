@@ -48,10 +48,10 @@ function spawn(innerHTML, initiator) {
 
 	e.classList.add("menu");
 	e.innerHTML = `
-		<p id="close" onclick="
+		<a id="close" class="btn-icon" onclick="
 			window.qrInitiator.disabled = false;
 			this.parentElement.remove();
-			">x</p>
+			">&times;</a>
 		${innerHTML}
 	`;
 
