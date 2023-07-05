@@ -1,12 +1,14 @@
 :root {
-	--in: #f0f0f0;
-	--bg: #e8e8e8;
-	--lt: #d0d0d0;
-	--sh: #a0a0a0;
-	--mg: #808080;
-	--hl: #404040;
-	--dk: #202020;
-	--fg: #181818;
+	--bg: #101014; /* background */
+	--lg: #202024; /* lowground */
+	--hg: #28282b; /* highground */
+
+	--sh: #303036; /* shadow */
+	--mg: #404048; /* midground */
+	--hl: #606070; /* highlight */
+
+	--sf: #a0a0b0; /* secondary */
+	--fg: #f0f0f0; /* foreground */
 
 	--blue: #a0a0e8;
 }
@@ -27,14 +29,14 @@ a {
 	line-height: 16px;
 	border: none;
 	border-radius: 20px;
-	box-shadow: 0 0 0 0 var(--lt);
+	outline: 1px solid var(--hg);
 	padding: 8px 16px;
-	background-color: var(--lt);
+	background-color: var(--hg);
 	color: var(--fg);
 	font-size: 12pt;
 	text-decoration: none;
 	transition:
-		box-shadow ease 0.25s,
+		outline ease 0.25s,
 		background-color ease 0.25s;
 }
 .btn-icon {
@@ -43,9 +45,9 @@ a {
 	height: 16px;
 	text-align: center;
 }
-.btn:hover, .btn-icon:hover {
-	box-shadow: 0 0 0 4px var(--lt);
-	background-color: var(--lt);
+.btn:hover, .btn-icon:hover, .btn:focus, .btn-icon:focus {
+	outline: 2px solid var(--hl);
+	background-color: var(--lg);
 	cursor: pointer;
 }
 header {
@@ -79,7 +81,7 @@ header h1 {
 }
 header h3, a {
 	margin-left: 8px;
-	color: var(--sh);
+	color: var(--sf);
 	font-weight: 400;
 	font-size: 12pt;
 }
@@ -96,12 +98,12 @@ header input {
 		background-color ease 0.25s;
 }
 header input:hover {
-	border-color: var(--lt);
+	border-color: var(--lg);
 	cursor: pointer;
 }
 header input:focus {
 	border-color: var(--mg);
-	background-color: var(--lt);
+	background-color: var(--lg);
 	outline: none;
 }
 header .group {

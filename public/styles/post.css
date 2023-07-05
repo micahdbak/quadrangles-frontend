@@ -30,7 +30,7 @@
 #post-desc h3 {
 	display: block;
 	margin: 16px 0;
-	color: var(--sh);
+	color: var(--sf);
 	font-size: 12pt;
 	font-weight: 400;
 }
@@ -54,26 +54,27 @@ section.comment-box {
 	font-size: 12pt;
 }
 #messages span.info {
-	color: var(--sh);
+	color: var(--sf);
 }
 #message {
 	position: absolute;
 	bottom: 0;
 	left: 50%;
 	transform: translateX(-50%);
-	border: 1px solid var(--lt);
+	border: 1px solid var(--hg);
 	border-radius: 4px;
 	padding: 4px 8px;
 	width: calc(100% - 16px);
 	height: 24px;
 	line-height: 24px;
-	background-color: var(--in);
+	background-color: var(--hg);
+	color: var(--fg);
 	font-size: 12pt;
 	transition:
 		border-width ease 0.25s,
 		border-color ease 0.25s;
 }
 #message:focus {
-	border: 2px solid var(--sh);
+	border: 2px solid var(--hl);
 	outline: none;
 }
