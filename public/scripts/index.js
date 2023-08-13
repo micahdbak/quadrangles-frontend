@@ -2,7 +2,6 @@
 // script for index.html
 
 import {
-	init_ws,
 	populate,
 	spawn,
 	spawnCreate,
@@ -65,6 +64,4 @@ window.onload = () => {
 		populate(posts, params.get("post")); // populate #posts with posts
 	};
 	topicInput.onchange(); // load topic specified by cookie
-
-	init_ws(); // initialize websocket buttons
 };

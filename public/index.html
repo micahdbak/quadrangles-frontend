@@ -8,6 +8,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<link rel="stylesheet" href="styles/root.css" />
 		<link rel="stylesheet" href="styles/index.css" />
+		<link rel="stylesheet" href="styles/comments.css" />
 		<link rel="icon" href="images/quadrangles.svg" type="image/svg" />
 		<script type="module" src="scripts/index.js"></script>
 	</head>
@@ -26,11 +27,10 @@
 			<div id="posts"></div>
 		</div>
 		<div id="comment-box">
-			<p id="up-prompt">&uarr;</p>
 			<div class="comment-body">
-				<p id="down-prompt">&darr;</p>
+				<p id="return-prompt">&darr;</p>
 				<div id="messages"></div>
-				<input type="text" id="ws-message"></input>
+				<input type="text" placeholder="Write a comment" id="ws-message"></input>
 			</div>
 		</div>
 	</body>

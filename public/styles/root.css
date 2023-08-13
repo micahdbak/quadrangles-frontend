@@ -1,6 +1,6 @@
 :root {
 	--bg: #101014; /* background */
-	--lg: #202024; /* lowground */
+	--lg: #18181b; /* lowground */
 	--hg: #28282b; /* highground */
 
 	--sh: #303036; /* shadow */
@@ -10,6 +10,8 @@
 	--sf: #a0a0b0; /* secondary */
 	--fg: #f0f0f0; /* foreground */
 
+	--dkprim: #8060e0;
+	--primary: #a080e8;
 	--blue: #a0a0e8;
 
 	--postsz: 200px;
@@ -23,7 +25,7 @@ body {
 	color: var(--fg);
 	font-family: "Inter", sans-serif;
 }
-h1, h2, h3, p {
+h1, h2, h3, h4, p {
 	margin: 0;
 }
 a {

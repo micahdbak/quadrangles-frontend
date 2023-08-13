@@ -3,97 +3,99 @@
 
 const HOST = "localhost:8080";
 
-function init_ws() {
+function close_ws() {
+	// disable comment box
+	document.getElementById("comment-box").classList.remove("active");
+
+	// attempt to close websocket
+	try {
+		window.qr_ws.close();
+	} catch {}
+	window.qr_ws = null;
+}
+
+function init_ws(pid) {
 	let comment_box = document.getElementById("comment-box");
-	let up_prompt = document.getElementById("up-prompt");
-	let down_prompt = document.getElementById("down-prompt");
 
-	up_prompt.onclick = () => {
-		if (window.qr_ws != null) {
-			try {
-				window.qr_ws.close();
-			} catch {}
-			window.qr_ws = null;
-		}
-
-		// invalid post
-		if (window.qr_post == -1)
-			return;
-
-		// attempt to open websocket for this post
-		try {
-			window.qr_ws = new WebSocket(`ws://${HOST}/api/ws/${window.qr_post}`);
-		} catch { return; } // return on failure to do so
-
-		window.qr_ws.addEventListener("message", (e) => {
-			// div that stores all received messages
-			let messages = document.getElementById("messages");
-			let m = JSON.parse(e.data); // received message
-
-			// create formatted p element for this message
-			let p = document.createElement("p");
-			p.innerHTML = `
-				<span class="info">(${m.cid}) ${getShortTime(m.time)}:</span> ${m.text}
-			`;
-
-			// add element to messages
-			messages.appendChild(p);
-			messages.scroll({ // scroll to newly received message
-				top: messages.scrollHeight - messages.offsetHeight,
-				left: 0,
-				behavior: "smooth"
-			});
-		});
-
-		// websocket is open; activate comment box
-		comment_box.classList.add("active");
-
-		// element that receives user input (new messages)
-		let ws_message = document.getElementById("ws-message");
-		ws_message.value = ""; // reset previously typed message
-		if (ws_message.getAttribute("keypress-listener") != "true") {
-			ws_message.setAttribute("keypress-listener", "true");
-			ws_message.addEventListener("keypress", (e) => {
-				// on enter key pressed
-				if (e.key == "Enter") {
-					// attempt to send message to server
-					try {
-						window.qr_ws.send(ws_message.value);
-					} catch {
-						let messages = document.getElementById("messages");
-						// notify user of failure
-						messages.innerHTML += `<p><span class="info">Could not send message.</span></p>`;
-					}
-
-					ws_message.value = "";
-				}
-			});
-		}
-
-		messages.innerHTML = ""; // reset messages to nothing
-		messages.style.visibility = "hidden"; // temporarily hide messages
-
-		// after a short period of time,
-		// scroll to bottom of received messages instantly,
-		// then make messages visible
-		setTimeout(() => {
-			messages.scroll({
-				top: messages.scrollHeight - messages.offsetHeight,
-				left: 0,
-				behavior: "instant"
-			});
-			messages.style.visibility = "visible";
-		}, 100);
-	};
-	down_prompt.onclick = () => {
-		// disable comment box
-		comment_box.classList.remove("active");
-		// attempt to close websocket
+	if (window.qr_ws != null) {
 		try {
 			window.qr_ws.close();
 		} catch {}
 		window.qr_ws = null;
-	};
+	}
+
+	// invalid post
+	if (pid == -1)
+		return;
+
+	// attempt to open websocket for this post
+	try {
+		window.qr_ws = new WebSocket(`ws://${HOST}/api/ws/${pid}`);
+	} catch { return; } // return on failure to do so
+
+	window.qr_ws.addEventListener("message", (e) => {
+		// div that stores all received messages
+		let messages = document.getElementById("messages");
+		let m = JSON.parse(e.data); // received message
+
+		// create formatted p element for this message
+		let message = document.createElement("div");
+		message.classList.add("message");
+		message.innerHTML = `
+			<h3>${getShortTime(m.time)}</h3>
+			<p>${m.text}</p>
+		`;
+
+		// add element to messages
+		messages.appendChild(message);
+		messages.scroll({ // scroll to newly received message
+			top: messages.scrollHeight - messages.offsetHeight,
+			left: 0,
+			behavior: "smooth"
+		});
+	});
+
+	// websocket is open; activate comment box
+	comment_box.classList.add("active");
+	let return_prompt = document.getElementById("return-prompt");
+	return_prompt.onclick = () => close_ws();
+
+	// element that receives user input (new messages)
+	let ws_message = document.getElementById("ws-message");
+	ws_message.value = ""; // reset previously typed message
+	if (ws_message.getAttribute("keypress-listener") != "true") {
+		ws_message.setAttribute("keypress-listener", "true");
+		ws_message.addEventListener("keypress", (e) => {
+			// on enter key pressed
+			if (e.key == "Enter") {
+				// attempt to send message to server
+				try {
+					window.qr_ws.send(ws_message.value);
+				} catch {
+					let messages = document.getElementById("messages");
+					// notify user of failure
+					messages.innerHTML += `<p><span class="info">Could not send message.</span></p>`;
+				}
+
+				ws_message.value = "";
+			}
+		});
+	}
+
+	messages.innerHTML = ""; // reset messages to nothing
+	messages.style.visibility = "hidden"; // temporarily hide messages
+
+	// after a short period of time,
+	// scroll to bottom of received messages instantly,
+	// then make messages visible
+	setTimeout(() => {
+		messages.scroll({
+			top: messages.scrollHeight - messages.offsetHeight,
+			left: 0,
+			behavior: "instant"
+		});
+		messages.style.visibility = "visible";
+	}, 100);
 }
 
 // selectPost: takes in posts_i; index in an array of posts visible under a topic
@@ -108,10 +110,7 @@ function selectPost(posts_i) {
 
 	window.qr_posts_e[posts_i].classList.add("select");
 	window.qr_posts_i = posts_i;
-	try {
-		window.qr_post = window.qr_posts[window.qr_posts_i].pid;
-	} catch { window.qr_post = -1; }
-	window.history.replaceState({}, null, `?post=${window.qr_post}`);
+	window.history.replaceState({}, null, `?post=${window.qr_posts[window.qr_posts_i].pid}`);
 }
 
 // populate: populates the index page with an array of posts
@@ -119,6 +118,21 @@ function populate(posts, selected_pid) {
 	window.qr_posts = posts;
 	window.qr_posts_e = [];
 	window.qr_posts_i = -1;
+
+	let scroller = document.getElementById("scroller");
+	let root = getComputedStyle(document.body);
+	let scrollw = // space between each post; scroll width
+		parseInt(root.getPropertyValue("--postsz")) +
+		2*parseInt(root.getPropertyValue("--postpad")) +
+		2*parseInt(root.getPropertyValue("--postmar"));
+	let scrollto = (_i, _behavior) => {
+		scroller.scroll({
+			"top": 0,
+			"left": _i * scrollw,
+			"behavior": _behavior
+		});
+		selectPost(_i);
+	};
 
 	let _posts = document.getElementById("posts");
 	_posts.innerHTML = "";
@@ -129,9 +143,26 @@ function populate(posts, selected_pid) {
 		post.classList.add("post");
 		post.innerHTML = `
 			<img src="/api/f/${p.file}" alt="${p.pid}'s image" />
-			<p>${p.text}</p>
 			<h3>${getTime(p.time)}</h3>
+			<p>${p.text}</p>
 		`;
+		let open_prompt = document.createElement("a");
+		open_prompt.innerHTML = "Open";
+		open_prompt.onclick = () => init_ws(p.pid);
+		post.appendChild(open_prompt);
+		const _i = i;
+		post.onclick = () => {
+			// jumping to a post is only allowed if it isn't selected
+			if (post.classList.contains("select"))
+				return;
+
+			// scroll to this post
+			scroller.scroll({
+				"top": 0,
+				"left": _i * scrollw,
+				"behavior": "smooth"
+			});
+		};
 
 		post = _posts.appendChild(post);
 		window.qr_posts_e.push(post);
@@ -148,13 +179,6 @@ function populate(posts, selected_pid) {
 		selected_pid = posts[0].pid;
 		selected_i = 0;
 	}
-
-	let scroller = document.getElementById("scroller");
-	let root = getComputedStyle(document.body);
-	let scrollw = // space between each post; scroll width
-		parseInt(root.getPropertyValue("--postsz")) +
-		2*parseInt(root.getPropertyValue("--postpad")) +
-		2*parseInt(root.getPropertyValue("--postmar"));
 
 	scroller.onscroll = () => {
 		let x = scroller.scrollLeft + scrollw/2;
@@ -300,7 +324,6 @@ function getShortTime(unix) {
 
 export {
 	HOST,
-	init_ws,
 	populate,
 	spawn,
 	spawnCreate,
